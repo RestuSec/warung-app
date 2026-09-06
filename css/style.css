@@ -386,6 +386,8 @@ nav.bottom button.active .ico { transform: translateY(-1px) scale(1.08); }
 .switch input:checked + .sl { background: var(--brand); }
 .switch input:checked + .sl:before { transform: translateX(21px); }
 
+.inst-hint { margin: 8px 4px 0; font-size: 13px; color: var(--muted); background: var(--bg); border: 1px dashed var(--line); border-radius: 10px; padding: 10px 12px; line-height: 1.5; }
+
 /* ---- Panel bayar (bill) ---- */
 .pos-wrap { display: block; }
 .bill-panel { display: none; }

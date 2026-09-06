@@ -37,6 +37,34 @@ function initSearch() {
   });
 }
 
+// ===== Install app (PWA) =====
+let deferredPrompt = null;
+
+function bisaInstall() { return !!deferredPrompt; }
+function jalanStandalone() {
+  return (navigator.standalone === true) ||
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+}
+function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent); }
+
+function installApp() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => { deferredPrompt = null; renderAll(); });
+}
+function installWant() {
+  return !jalanStandalone() && (bisaInstall() || isIOS());
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (currentPage === 'pengaturan') renderPengaturan();
+});
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+});
+
 // Init
 (async function init() {
   try {

@@ -1,8 +1,16 @@
 // ===== Pengaturan: export, backup, restore, dark mode =====
 function renderPengaturan() {
-  let html = `<h2 class="page-title">⚙️ Pengaturan</h2>
+  let installBlock = '';
+  if (installWant()) {
+    installBlock = `<div class="set-row" onclick="${bisaInstall() ? 'installApp()' : 'document.getElementById(\'instHp\').hidden = false'}">
+        <div class="set-l"><span class="set-ic">${icon('backup')}</span><div><div class="t">Install Aplikasi</div><div class="s">Pasang di layar utama HP</div></div></div>
+        <span class="set-arrow">›</span>
+      </div>${isIOS() && !bisaInstall() ? `<div id="instHp" hidden class="inst-hint">Safari: buka menu <b>Bagikan</b> → <b>Tambahkan ke Layar Utama</b>.</div>` : ''}`;
+  }
+  let html = `<h2 class="page-title">Pengaturan</h2>
     <p class="page-sub">Kelola data warung kamu.</p>
     <div class="set-list">
+      ${installBlock}
       <div class="set-row">
         <div><div class="t">Mode Gelap</div><div class="s">Tampilan gelap</div></div>
         <label class="switch"><input type="checkbox" id="darkToggle" ${document.body.dataset.theme === 'dark' ? 'checked' : ''} onchange="toggleDark(this.checked)"><span class="sl"></span></label>
