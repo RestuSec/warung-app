@@ -397,6 +397,16 @@ nav.bottom button.active .ico { transform: translateY(-1px) scale(1.08); }
 .switch input:checked + .sl { background: var(--brand); }
 .switch input:checked + .sl:before { transform: translateX(21px); }
 
+.stok-control { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.step-group { display: flex; gap: 6px; }
+.step-chip {
+  padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--card); color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.step-chip.on { border-color: var(--brand); color: var(--brand-deep); background: #eef5ec; }
+[data-theme="dark"] .step-chip.on { background: #212c1f; }
+.stok-card.isi-on { cursor: pointer; transition: transform .08s ease; }
+.stok-card.isi-on:active { transform: scale(.97); border-color: var(--brand); }
 .inst-hint { margin: 8px 4px 0; font-size: 13px; color: var(--muted); background: var(--bg); border: 1px dashed var(--line); border-radius: 10px; padding: 10px 12px; line-height: 1.5; }
 
 /* ---- Panel bayar (bill) ---- */

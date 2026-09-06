@@ -517,11 +517,49 @@ async function selesaiBayar(grand, paid) {
 }
 
 // ===== Stok halaman =====
+// ===== Stok: mode isi cepat (barang datang) =====
+let modeIsi = false;
+let stepIsi = 1;
+
+function toggleIsi() { modeIsi = !modeIsi; renderStok(); }
+function setStep(n) { stepIsi = n; renderStok(); }
+
+async function tambahStok(id) {
+  const p = state.produk.find((x) => x.id === id);
+  if (!p) return;
+  p.stok = (p.stok || 0) + stepIsi;
+  await put('produk', p);
+  const el = document.getElementById('stkv-' + id);
+  if (el) {
+    const stok = p.stok;
+    el.textContent = String(stok);
+    el.className = 'stok-val ' + (stok <= 0 ? 'stok-habis' : (stok <= 5 ? 'stok-min' : 'stok-aman'));
+    el.classList.remove('pop-row'); void el.offsetWidth; el.classList.add('pop-row');
+  }
+}
+
 function renderStok() {
   const sorted = [...state.produk].sort((a, b) => (a.stok ?? 0) - (b.stok ?? 0));
   let html = `<div class="page-header">
     <h2 class="page-title">Stok & Expired</h2>
   </div>`;
+
+  if (modeIsi) {
+    html += `<div class="stok-control">
+      <button class="quick-chip on" onclick="toggleIsi()"><span class="dot"></span>Selesai</button>
+      <div class="step-group">
+        <button class="step-chip${stepIsi === 1 ? ' on' : ''}" onclick="setStep(1)">+1</button>
+        <button class="step-chip${stepIsi === 10 ? ' on' : ''}" onclick="setStep(10)">+10</button>
+        <button class="step-chip${stepIsi === 100 ? ' on' : ''}" onclick="setStep(100)">+100</button>
+      </div>
+    </div>
+    <div class="topbar-hint" style="margin:0 4px 8px">Tap kartu = stok <b>+${stepIsi}</b>. Buat barang datang, tinggal tap-tap.</div>`;
+  } else {
+    html += `<div class="stok-control">
+      <button class="quick-chip" onclick="toggleIsi()"><span class="dot"></span>Stok Masuk</button>
+      <span class="topbar-hint">Barang datang? Aktifkan, lantas tap-tap.</span>
+    </div>`;
+  }
 
   if (sorted.length === 0) {
     html += `<div class="pos-empty">Belum ada produk.</div>`;
@@ -530,10 +568,10 @@ function renderStok() {
     for (const p of sorted) {
       const expInfo = expBadge(p);
       const stokColor = (p.stok <= 0) ? 'stok-habis' : (p.stok <= 5 ? 'stok-min' : 'stok-aman');
-      html += `<div class="stok-card">
+      html += `<div class="stok-card${modeIsi ? ' isi-on' : ''}" ${modeIsi ? `onclick="tambahStok(${p.id})"` : ''}>
         <div class="stok-card-top">
           <span class="stok-nama">${esc(p.nama)}</span>
-          <span class="stok-val ${stokColor}">${p.stok != null ? p.stok : '-'}</span>
+          <span class="stok-val ${stokColor}" id="stkv-${p.id}">${p.stok != null ? p.stok : '-'}</span>
         </div>
         <div class="stok-card-bottom">
           <span>${hargaStr(p)}</span>
