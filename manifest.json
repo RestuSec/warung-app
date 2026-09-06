@@ -1,0 +1,13 @@
+{
+  "name": "WarungApp",
+  "short_name": "Warung",
+  "description": "Aplikasi kasir & manajemen warung",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#16a34a",
+  "theme_color": "#16a34a",
+  "orientation": "any",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
