@@ -119,6 +119,11 @@ function renderPOS() {
   if (list.length === 0) {
     html += `<div class="pos-empty">Produk tidak ditemukan.<br><small>Ketik kata lain atau tambah produk baru.</small></div>`;
   } else {
+    html += `<div class="pos-topbar">
+      <button class="quick-chip${modeCepat ? ' on' : ''}" onclick="toggleCepat()">
+        <span class="dot"></span>Mode Cepat ${modeCepat ? 'Menyala' : 'Mati'}</button>
+      <span class="topbar-hint">${modeCepat ? 'Tap produk = langsung masuk keranjang' : 'Tap produk = pilih harga dulu'}</span>
+    </div>`;
     html += `<div class="pos-list">`;
     for (const p of list) {
       const qty = cartQty(p.id);
@@ -249,8 +254,30 @@ function updateTotals() {
   if (count === 0 && document.querySelector('.totals')) renderPOS();
 }
 
+// ===== Mode cepat: tap produk = tambah 1, tanpa popup =====
+let modeCepat = false;
+function toggleCepat() { modeCepat = !modeCepat; renderPOS(); }
+
+function addCepat(id) {
+  const p = state.produk.find((x) => x.id === id);
+  if (!p || p.stok === 0) return;
+  let h = null;
+  state.cart.forEach((c) => { if (c.id === id) h = c.harga; });
+  if (h === null) {
+    const hs = hargaList(p).filter((x) => x > 0);
+    if (hs.length === 0) return;
+    h = hs[0];
+  }
+  const key = cartKey(id, h);
+  const ex = state.cart.get(key);
+  state.cart.set(key, { id, nama: p.nama, harga: h, qty: (ex ? ex.qty : 0) + 1 });
+  updateRow(id);
+  updateTotals();
+}
+
 function tapProduk(id) {
-  openPricePopup(id);
+  if (modeCepat) addCepat(id);
+  else openPricePopup(id);
 }
 
 // ===== Harga popup: pilih varian dulu, kalau satu langsung qty =====

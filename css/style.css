@@ -105,6 +105,17 @@ main.page { padding: 12px 14px; }
 .btn-bayar:active { transform: translateY(1px); }
 
 .pos-list { display: flex; flex-direction: column; gap: 8px; }
+.pos-topbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.quick-chip {
+  display: flex; align-items: center; gap: 6px; padding: 7px 12px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--card); color: var(--muted); font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.quick-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.quick-chip.on { border-color: var(--brand); color: var(--brand-deep); background: #eef5ec; }
+[data-theme="dark"] .quick-chip.on { background: #212c1f; }
+.quick-chip.on .dot { background: var(--brand); }
+.topbar-hint { font-size: 11px; color: var(--muted); }
 .pos-row {
   background: var(--card); border: 1px solid var(--line); border-radius: 14px;
   padding: 10px 12px;
